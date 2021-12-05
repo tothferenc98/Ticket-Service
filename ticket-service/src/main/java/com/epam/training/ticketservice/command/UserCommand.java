@@ -16,31 +16,31 @@ public class UserCommand {
         this.userService = userService;
     }
 
-    @ShellMethod(key = "user login", value = "User login")
+    @ShellMethod(key = "sign in privileged", value = "User login")
     public String login(String username, String password) {
         Optional<UserDto> user = userService.login(username, password);
         if (user.isEmpty()) {
-            return "Wrong username or password!";
+            return "Login failed due to incorrect credentials";
         }
-        return user.get() + " is logged in!";
+        return null;
     }
 
-    @ShellMethod(key = "user logout", value = "User logout")
-    public String logout() {
+    @ShellMethod(key = "sign out", value = "User logout")
+    public void logout() {
         Optional<UserDto> user = userService.logout();
-        if (user.isEmpty()) {
+        /*if (user.isEmpty()) {
             return "You need to login first!";
         }
-        return user.get() + " is logged out!";
+        return user.get().getUsername() + " is logged out!";*/
     }
 
-    @ShellMethod(key = "user print", value = "Get user information")
+    @ShellMethod(key = "describe account", value = "Get user information")
     public String printLoggedInUser() {
         Optional<UserDto> userDto = userService.getLoggedInUser();
         if (userDto.isEmpty()) {
-            return "You need to login first!";
+            return "You are not signed in";
         }
-        return userDto.get().toString();
+        return "Signed in with privileged account '" + userDto.get().getUsername() + "'";
     }
 
     @ShellMethod(key = "user register", value = "User registration")
