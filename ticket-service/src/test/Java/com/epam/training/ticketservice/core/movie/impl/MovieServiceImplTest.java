@@ -94,5 +94,23 @@ public class MovieServiceImplTest {
         Mockito.verifyNoMoreInteractions(movieRepository);
     }
 
+    @Test
+    public void tesDtoEquals() {
+        boolean a= movie1Dto.equals(movie1Dto);
+        Assertions.assertTrue(a);
+    }
+
+    @Test
+    public void tesDtoNotEquals() {
+        boolean a= movie1Dto.equals(movie2Dto);
+        Assertions.assertFalse(a);
+    }
+
+    @Test
+    public void tesDtoToString() {
+
+        Assertions.assertEquals("Dune (Sci-fi, 155 minutes)",movie1Dto.toString());
+    }
+
 
 }

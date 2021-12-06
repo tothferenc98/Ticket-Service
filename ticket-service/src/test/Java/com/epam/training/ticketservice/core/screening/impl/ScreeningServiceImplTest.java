@@ -230,13 +230,13 @@ public class ScreeningServiceImplTest {
     }
 
     @Test
-    public void tesfdgd() {
+    public void tesDtoEquals() {
         boolean a= screeningDto.equals(screeningDto);
         Assertions.assertTrue(a);
     }
 
     @Test
-    public void tesfdgdFalse() {
+    public void tesDtoNotEquals() {
         boolean a= screeningDto.equals(screeningDto2);
         Assertions.assertFalse(a);
     }

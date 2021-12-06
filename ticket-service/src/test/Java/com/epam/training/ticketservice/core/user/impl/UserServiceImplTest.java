@@ -11,6 +11,8 @@ import com.epam.training.ticketservice.core.user.model.UserDto;
 import com.epam.training.ticketservice.core.user.persistence.entity.User;
 import com.epam.training.ticketservice.core.user.persistence.repository.UserRepository;
 import java.util.Optional;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
@@ -133,5 +135,20 @@ class UserServiceImplTest {
 
         // Then
         verify(userRepository).save(new User("user", "pass", User.Role.USER));
+    }
+
+    @Test
+    public void tesDtoEquals() {
+        User user = new User("user", "password", User.Role.USER);
+        boolean a= user.equals(user);
+        Assertions.assertTrue(a);
+    }
+
+    @Test
+    public void tesDtoNotEquals() {
+        User user = new User("user", "password", User.Role.USER);
+        User user2 = new User("user", "password2", User.Role.USER);
+        boolean a= user.equals(user2);
+        Assertions.assertFalse(a);
     }
 }
