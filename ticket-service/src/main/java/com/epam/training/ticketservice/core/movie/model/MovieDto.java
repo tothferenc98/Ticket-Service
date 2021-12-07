@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.Objects;
-
 @Builder
 @EqualsAndHashCode
 @Getter

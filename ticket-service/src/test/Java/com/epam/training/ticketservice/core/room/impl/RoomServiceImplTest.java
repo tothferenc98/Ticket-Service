@@ -1,11 +1,8 @@
 package com.epam.training.ticketservice.core.room.impl;
 
-
-import com.epam.training.ticketservice.core.room.impl.RoomServiceImpl;
 import com.epam.training.ticketservice.core.room.model.RoomDto;
 import com.epam.training.ticketservice.core.room.persistence.entity.Room;
 import com.epam.training.ticketservice.core.room.persistence.repository.RoomRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -17,7 +14,7 @@ import static org.mockito.Mockito.*;
 
 public class RoomServiceImplTest {
 
-    private static final Room room1Entity = new Room("Pedersoli", 5 , 6);
+    private static final Room room1Entity = new Room("Pedersoli", 5, 6);
     private static final Room room2Entity = new Room("Room2", 9, 5);
 
     private static final RoomDto room1Dto = new RoomDto.Builder()
@@ -63,8 +60,7 @@ public class RoomServiceImplTest {
     }
 
     @Test
-    public void testDeleteRoomShouldCallRoomRepositoryWhenRoomNameIsExistsInDatabase()
-    {
+    public void testDeleteRoomShouldCallRoomRepositoryWhenRoomNameIsExistsInDatabase() {
         // Given
         Mockito.when(roomRepository.findRoomByName("room title")).thenReturn(Optional.of(room1Entity));
         // When
@@ -73,35 +69,5 @@ public class RoomServiceImplTest {
         Mockito.verify(roomRepository).findRoomByName(("room title"));
         Mockito.verify(roomRepository).delete((room1Entity));
         Mockito.verifyNoMoreInteractions(roomRepository);
-    }
-
-    @Test
-    public void tesDtoEquals() {
-        boolean a= room1Dto.equals(room1Dto);
-        Assertions.assertTrue(a);
-    }
-
-    @Test
-    public void tesDtoNotEquals() {
-        boolean a= room1Dto.equals(room2Dto);
-        Assertions.assertFalse(a);
-    }
-
-    @Test
-    public void tesEntityEquals() {
-        boolean a= room1Entity.equals(room1Entity);
-        Assertions.assertTrue(a);
-    }
-
-    @Test
-    public void tesEntityNotEquals() {
-        boolean a= room1Entity.equals(room2Entity);
-        Assertions.assertFalse(a);
-    }
-
-    @Test
-    public void tesDtoToString() {
-
-        Assertions.assertEquals("Room Pedersoli with 30 seats, 5 rows and 6 columns",room1Dto.toString());
     }
 }

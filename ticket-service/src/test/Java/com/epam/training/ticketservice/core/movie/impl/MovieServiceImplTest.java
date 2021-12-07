@@ -4,13 +4,10 @@ package com.epam.training.ticketservice.core.movie.impl;
 import com.epam.training.ticketservice.core.movie.model.MovieDto;
 import com.epam.training.ticketservice.core.movie.persistence.entity.Movie;
 import com.epam.training.ticketservice.core.movie.persistence.repository.MovieRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,7 +15,7 @@ import static org.mockito.Mockito.*;
 
 public class MovieServiceImplTest {
 
-    private static final Movie movie1Entity = new Movie("Dune", "Sci-fi" , 155);
+    private static final Movie movie1Entity = new Movie("Dune", "Sci-fi", 155);
     private static final Movie movie2Entity = new Movie("Venom", "Action", 97);
 
     private static final MovieDto movie1Dto = new MovieDto.Builder()
@@ -65,8 +62,7 @@ public class MovieServiceImplTest {
 
 
     @Test
-    public void testUpdateMovieShouldCallMovieRepositoryWhenTheInputMovieIsExistsInDatabase()
-    {
+    public void testUpdateMovieShouldCallMovieRepositoryWhenTheInputMovieIsExistsInDatabase() {
         // Given
         Mockito.when(movieRepository.findMovieByTitle(movie1Dto.getTitle()))
                 .thenReturn(Optional.of(movie1Entity));
@@ -82,8 +78,7 @@ public class MovieServiceImplTest {
     }
 
     @Test
-    public void testDeleteMovieShouldCallMovieRepositoryWhenMovieTitleIsExistsInDatabase()
-    {
+    public void testDeleteMovieShouldCallMovieRepositoryWhenMovieTitleIsExistsInDatabase() {
         // Given
         Mockito.when(movieRepository.findMovieByTitle("movie title")).thenReturn(Optional.of(movie1Entity));
         // When
@@ -92,24 +87,6 @@ public class MovieServiceImplTest {
         Mockito.verify(movieRepository).findMovieByTitle(("movie title"));
         Mockito.verify(movieRepository).delete((movie1Entity));
         Mockito.verifyNoMoreInteractions(movieRepository);
-    }
-
-    @Test
-    public void tesDtoEquals() {
-        boolean a= movie1Dto.equals(movie1Dto);
-        Assertions.assertTrue(a);
-    }
-
-    @Test
-    public void tesDtoNotEquals() {
-        boolean a= movie1Dto.equals(movie2Dto);
-        Assertions.assertFalse(a);
-    }
-
-    @Test
-    public void tesDtoToString() {
-
-        Assertions.assertEquals("Dune (Sci-fi, 155 minutes)",movie1Dto.toString());
     }
 
 

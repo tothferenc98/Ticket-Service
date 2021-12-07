@@ -1,6 +1,5 @@
 package com.epam.training.ticketservice.core.room.model;
 
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 

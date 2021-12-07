@@ -1,6 +1,5 @@
 package com.epam.training.ticketservice.core.screening.impl;
 
-import com.epam.training.ticketservice.core.room.impl.RoomServiceImpl;
 import com.epam.training.ticketservice.core.room.model.RoomDto;
 import com.epam.training.ticketservice.core.room.persistence.entity.Room;
 import com.epam.training.ticketservice.core.room.persistence.repository.RoomRepository;
@@ -14,31 +13,13 @@ import com.epam.training.ticketservice.core.movie.persistence.entity.Movie;
 import com.epam.training.ticketservice.core.movie.persistence.repository.MovieRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import javax.validation.constraints.AssertTrue;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
 public class ScreeningServiceImplTest {
 
-    private static final String DUMMY_MOVIE_TITLE = "Title";
-    private static final String DUMMY_MOVIE_GENRE = "Genre";
-    private static final int DUMMY_MOVIE_LENGTH = 30;
-    private static final String DUMMY_ROOM_NAME = "Name";
-    private static final int DUMMY_ROOM_ROWS = 5;
-    private static final int DUMMY_ROOM_COLUMNS = 5;
-    private static final String DUMMY_START_DATE = "2021-01-01 12:00";
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm");
 
     private static final Room roomEntity = Room.builder()
             .name("roomName")
@@ -118,35 +99,39 @@ public class ScreeningServiceImplTest {
     public void testCreateScreeningShouldNotCreateScreeningWhenPassedScreeningsBeginningOverlapsWithOtherScreeningsEnding() {
 
         Movie otherMovie = Movie.builder()
-                .withTitle("Other")
-                .withGenre(DUMMY_MOVIE_GENRE)
-                .withLength(DUMMY_MOVIE_LENGTH)
+                .withTitle("Film2")
+                .withGenre(movieEntity.getGenre())
+                .withLength(movieEntity.getLength())
                 .build();
         Room room = Room.builder()
-                .name("DUMMY_ROOM_NAME")
-                .rows(DUMMY_ROOM_ROWS)
-                .columns(DUMMY_ROOM_COLUMNS)
+                .name("Room2")
+                .rows(roomEntity.getRows())
+                .columns(roomEntity.getColumns())
                 .build();
         Screening screeningToOverlapWith =
                 Screening.builder()
                         .id(null)
                         .movie(otherMovie)
                         .room(room)
-                        .startDateTime(LocalDateTime.of(2021, 1, 1, 11, 45))
+                        .startDateTime(LocalDateTime.of(2021, 12, 6, 10, 15))
                         .build();
-        Mockito.when(movieRepository.findMovieByTitle(DUMMY_MOVIE_TITLE))
-                .thenReturn(Optional.of(new Movie(DUMMY_MOVIE_TITLE, DUMMY_MOVIE_GENRE, DUMMY_MOVIE_LENGTH)));
-        Mockito.when(roomRepository.findRoomByName(DUMMY_ROOM_NAME))
+        Mockito.when(movieRepository.findMovieByTitle( movieEntity.getTitle()))
+                .thenReturn(Optional.of(Movie.builder()
+                        .withTitle(movieEntity.getTitle())
+                        .withGenre(movieEntity.getGenre())
+                        .withLength(movieEntity.getLength())
+                        .build()));
+        Mockito.when(roomRepository.findRoomByName(roomEntity.getName()))
                 .thenReturn(Optional.of(room));
         Mockito.when(screeningRepository.findScreeningsByRoom(room)).thenReturn(List.of(screeningToOverlapWith));
         String expected = "There is an overlapping screening";
 
         // When
-        String actual = underTest.createScreening(DUMMY_MOVIE_TITLE, DUMMY_ROOM_NAME, DUMMY_START_DATE);
+        String actual = underTest.createScreening(movieEntity.getTitle(), roomEntity.getName(), "2021-12-06 10:30");
 
         // Then
-        Mockito.verify(movieRepository).findMovieByTitle(DUMMY_MOVIE_TITLE);
-        Mockito.verify(roomRepository).findRoomByName(DUMMY_ROOM_NAME);
+        Mockito.verify(movieRepository).findMovieByTitle(movieEntity.getTitle());
+        Mockito.verify(roomRepository).findRoomByName(roomEntity.getName());
         Mockito.verify(screeningRepository).findScreeningsByRoom(room);
         Mockito.verifyNoMoreInteractions(screeningRepository, movieRepository, roomRepository);
         Assertions.assertEquals(actual, expected);
@@ -156,35 +141,39 @@ public class ScreeningServiceImplTest {
     public void testCreateScreeningShouldNotCreateScreeningWhenPassedScreeningsBeginningOverlapsWithOtherScreeningsEnding2() {
 
         Movie otherMovie = Movie.builder()
-                .withTitle("Other")
-                .withGenre(DUMMY_MOVIE_GENRE)
-                .withLength(DUMMY_MOVIE_LENGTH)
+                .withTitle("Film2")
+                .withGenre(movieEntity.getGenre())
+                .withLength(movieEntity.getLength())
                 .build();
         Room room = Room.builder()
-                .name("DUMMY_ROOM_NAME")
-                .rows(DUMMY_ROOM_ROWS)
-                .columns(DUMMY_ROOM_COLUMNS)
+                .name("Room2")
+                .rows(roomEntity.getRows())
+                .columns(roomEntity.getColumns())
                 .build();
         Screening screeningToOverlapWith =
                 Screening.builder()
                         .id(null)
                         .movie(otherMovie)
                         .room(room)
-                        .startDateTime(LocalDateTime.of(2021, 1, 1, 12, 00))
+                        .startDateTime(LocalDateTime.of(2021, 12, 6, 10, 30))
                         .build();
-        Mockito.when(movieRepository.findMovieByTitle(DUMMY_MOVIE_TITLE))
-                .thenReturn(Optional.of(new Movie(DUMMY_MOVIE_TITLE, DUMMY_MOVIE_GENRE, DUMMY_MOVIE_LENGTH)));
-        Mockito.when(roomRepository.findRoomByName(DUMMY_ROOM_NAME))
+        Mockito.when(movieRepository.findMovieByTitle( movieEntity.getTitle()))
+                .thenReturn(Optional.of(Movie.builder()
+                        .withTitle(movieEntity.getTitle())
+                        .withGenre(movieEntity.getGenre())
+                        .withLength(movieEntity.getLength())
+                        .build()));
+        Mockito.when(roomRepository.findRoomByName(roomEntity.getName()))
                 .thenReturn(Optional.of(room));
         Mockito.when(screeningRepository.findScreeningsByRoom(room)).thenReturn(List.of(screeningToOverlapWith));
         String expected = "There is an overlapping screening";
 
         // When
-        String actual = underTest.createScreening(DUMMY_MOVIE_TITLE, DUMMY_ROOM_NAME, DUMMY_START_DATE);
+        String actual = underTest.createScreening(movieEntity.getTitle(), roomEntity.getName(), "2021-12-06 10:30");
 
         // Then
-        Mockito.verify(movieRepository).findMovieByTitle(DUMMY_MOVIE_TITLE);
-        Mockito.verify(roomRepository).findRoomByName(DUMMY_ROOM_NAME);
+        Mockito.verify(movieRepository).findMovieByTitle(movieEntity.getTitle());
+        Mockito.verify(roomRepository).findRoomByName(roomEntity.getName());
         Mockito.verify(screeningRepository).findScreeningsByRoom(room);
         Mockito.verifyNoMoreInteractions(screeningRepository, movieRepository, roomRepository);
         Assertions.assertEquals(actual, expected);
@@ -195,139 +184,44 @@ public class ScreeningServiceImplTest {
     public void testCreateScreeningShouldNotCreateScreeningWhenPassedScreeningOverlapsWithOtherScreeningsBreakPeriod() {
 
         Movie otherMovie = Movie.builder()
-                .withTitle("Other")
-                .withGenre(DUMMY_MOVIE_GENRE)
-                .withLength(DUMMY_MOVIE_LENGTH)
+                .withTitle("Film2")
+                .withGenre(movieEntity.getGenre())
+                .withLength(movieEntity.getLength())
                 .build();
         Room room = Room.builder()
-                .name("DUMMY_ROOM_NAME")
-                .rows(DUMMY_ROOM_ROWS)
-                .columns(DUMMY_ROOM_COLUMNS)
+                .name("Room2")
+                .rows(roomEntity.getRows())
+                .columns(roomEntity.getColumns())
                 .build();
         Screening screeningToOverlapWith =
                 Screening.builder()
                         .id(null)
                         .movie(otherMovie)
                         .room(room)
-                        .startDateTime(LocalDateTime.of(2021, 1, 1, 11, 25))
+                        .startDateTime(LocalDateTime.of(2021, 12, 6, 7, 50))
                         .build();
-        Mockito.when(movieRepository.findMovieByTitle(DUMMY_MOVIE_TITLE))
-                .thenReturn(Optional.of(new Movie(DUMMY_MOVIE_TITLE, DUMMY_MOVIE_GENRE, DUMMY_MOVIE_LENGTH)));
-        Mockito.when(roomRepository.findRoomByName(DUMMY_ROOM_NAME))
+        Mockito.when(movieRepository.findMovieByTitle( movieEntity.getTitle()))
+                .thenReturn(Optional.of(Movie.builder()
+                        .withTitle(movieEntity.getTitle())
+                        .withGenre(movieEntity.getGenre())
+                        .withLength(movieEntity.getLength())
+                        .build()));
+        Mockito.when(roomRepository.findRoomByName(roomEntity.getName()))
                 .thenReturn(Optional.of(room));
         Mockito.when(screeningRepository.findScreeningsByRoom(room)).thenReturn(List.of(screeningToOverlapWith));
         String expected = "This would start in the break period after another screening in this room";
 
         // When
-        String actual = underTest.createScreening(DUMMY_MOVIE_TITLE, DUMMY_ROOM_NAME, DUMMY_START_DATE);
+        String actual = underTest.createScreening(movieEntity.getTitle(), roomEntity.getName(), "2021-12-06 10:30");
 
         // Then
-        Mockito.verify(movieRepository).findMovieByTitle(DUMMY_MOVIE_TITLE);
-        Mockito.verify(roomRepository).findRoomByName(DUMMY_ROOM_NAME);
+        Mockito.verify(movieRepository).findMovieByTitle(movieEntity.getTitle());
+        Mockito.verify(roomRepository).findRoomByName(roomEntity.getName());
         Mockito.verify(screeningRepository).findScreeningsByRoom(room);
         Mockito.verifyNoMoreInteractions(screeningRepository, movieRepository, roomRepository);
         Assertions.assertEquals(actual, expected);
     }
 
-    @Test
-    public void tesDtoEquals() {
-        boolean a= screeningDto.equals(screeningDto);
-        Assertions.assertTrue(a);
-    }
 
-    @Test
-    public void tesDtoNotEquals() {
-        boolean a= screeningDto.equals(screeningDto2);
-        Assertions.assertFalse(a);
-    }
 
-/*
-    @Test
-    public void testDeleteScreeningShouldThrowUnknownScreeningExceptionWhenScreeningIsNotExists() {
-        // Given
-        Mockito.when(screeningRepository
-            .findByMovieEntity_TitleAndAndRoomEntity_NameAndStartTime(CREATE_SCREENING_DTO_1.getMovieName(),
-                CREATE_SCREENING_DTO_1.getRoomName(), CREATE_SCREENING_DTO_1.getTime()))
-            .thenReturn(Optional.empty());
-        // When
-        Assertions
-            .assertThrows(UnknownScreeningException.class, () -> underTest.deleteScreening(CREATE_SCREENING_DTO_1));
-        // Then
-        Mockito.verify(screeningRepository)
-            .findByMovieEntity_TitleAndAndRoomEntity_NameAndStartTime(CREATE_SCREENING_DTO_1.getMovieName(),
-                CREATE_SCREENING_DTO_1.getRoomName(), CREATE_SCREENING_DTO_1.getTime());
-        Mockito.verifyNoMoreInteractions(movieRepository);
-    }
-
-    @Test
-    public void testCreateScreeningShouldCallScreeningRepositoryWhenScreeningInputIsValid()
-    {
-        // Given
-        Mockito.when(movieRepository.findMovieEntityByTitle(CREATE_SCREENING_DTO_1.getMovieName()))
-            .thenReturn(Optional.of(MOVIE_ENTITY));
-        Mockito.when(roomRepository.findByName(CREATE_SCREENING_DTO_1.getRoomName()))
-            .thenReturn(Optional.of(ROOM_ENTITY));
-        Mockito.when(screeningRepository.save(SCREENING_ENTITY_1)).thenReturn(SCREENING_ENTITY_1);
-        // When
-        underTest.createScreening(CREATE_SCREENING_DTO_1);
-        // Then
-        Mockito.verify(movieRepository).findMovieEntityByTitle(CREATE_SCREENING_DTO_1.getMovieName());
-        Mockito.verify(roomRepository).findByName(CREATE_SCREENING_DTO_1.getRoomName());
-        Mockito.verify(screeningRepository).save(SCREENING_ENTITY_1);
-        Mockito.verifyNoMoreInteractions(movieRepository);
-        Mockito.verifyNoMoreInteractions(roomRepository);
-    }
-
-    @Test
-    public void testCreateScreeningShouldThrowScreeningCreationExceptionWhenScreeningMovieTitleIsNotFound() {
-        // Given
-        Mockito.when(movieRepository.findMovieEntityByTitle(CREATE_SCREENING_DTO_1.getMovieName()))
-            .thenReturn(Optional.empty());
-        Mockito.when(roomRepository.findByName(CREATE_SCREENING_DTO_1.getRoomName()))
-            .thenReturn(Optional.of(ROOM_ENTITY));
-        // When
-        Assertions
-            .assertThrows(ScreeningCreationException.class, () -> underTest.createScreening(CREATE_SCREENING_DTO_1));
-        // Then
-        Mockito.verify(movieRepository).findMovieEntityByTitle(CREATE_SCREENING_DTO_1.getMovieName());
-        Mockito.verify(roomRepository).findByName(CREATE_SCREENING_DTO_1.getRoomName());
-        Mockito.verifyNoMoreInteractions(movieRepository);
-        Mockito.verifyNoMoreInteractions(screeningRepository);
-        Mockito.verifyNoMoreInteractions(roomRepository);
-    }
-
-    @Test
-    public void testCreateScreeningShouldThrowScreeningCreationExceptionWhenScreeningRoomNameIsNotFound() {
-       // Given
-        Mockito.when(movieRepository.findMovieEntityByTitle(CREATE_SCREENING_DTO_1.getMovieName()))
-            .thenReturn(Optional.of(MOVIE_ENTITY));
-        Mockito.when(roomRepository.findByName(CREATE_SCREENING_DTO_1.getRoomName())).thenReturn(Optional.empty());
-        // When
-        Assertions
-            .assertThrows(ScreeningCreationException.class, () -> underTest.createScreening(CREATE_SCREENING_DTO_1));
-        // Then
-        Mockito.verify(movieRepository).findMovieEntityByTitle(CREATE_SCREENING_DTO_1.getMovieName());
-        Mockito.verify(roomRepository).findByName(CREATE_SCREENING_DTO_1.getRoomName());
-        Mockito.verifyNoMoreInteractions(movieRepository);
-        Mockito.verifyNoMoreInteractions(screeningRepository);
-        Mockito.verifyNoMoreInteractions(roomRepository);
-    }
-
-    @Test
-    public void testCreateScreeningShouldThrowScreeningCreationExceptionWhenScreeningRoomAndMovieAreNotFound() {
-       // Given
-        Mockito.when(movieRepository.findMovieEntityByTitle(CREATE_SCREENING_DTO_1.getMovieName()))
-            .thenReturn(Optional.empty());
-        Mockito.when(roomRepository.findByName(CREATE_SCREENING_DTO_1.getRoomName())).thenReturn(Optional.empty());
-        // When
-        Assertions
-            .assertThrows(ScreeningCreationException.class, () -> underTest.createScreening(CREATE_SCREENING_DTO_1));
-        // Then
-        Mockito.verify(movieRepository).findMovieEntityByTitle(CREATE_SCREENING_DTO_1.getMovieName());
-        Mockito.verify(roomRepository).findByName(CREATE_SCREENING_DTO_1.getRoomName());
-        Mockito.verifyNoMoreInteractions(movieRepository);
-        Mockito.verifyNoMoreInteractions(screeningRepository);
-        Mockito.verifyNoMoreInteractions(roomRepository);
-    }
-*/
 }

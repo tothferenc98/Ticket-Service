@@ -16,11 +16,11 @@ public class MovieCommandTest {
 
     @Test
     public void test(){
-        //given
+        // Given
         String result;
-        //when
+        // When
         movieCommand.createMovie("film","drama",154);
-        //then
+        // Then
         assertEquals(Collections.emptyList(),movieService.listAll());
     }
 }
